@@ -1,0 +1,7 @@
+{
+  "name": "openaq",
+  "openaqURL": "https://urbreath.virtualcitymap.de/openaqproxy/",
+  "chartType": "line",
+  "requestDays": 7,
+  "version": "^1.0.1"
+}
