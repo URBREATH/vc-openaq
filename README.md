@@ -1,45 +1,59 @@
+I don’t have a configured repository to edit, so here’s a copy-ready rewrite based on the README text you provided.
+
 # openaq
 
-> Part of the [VC Map Project](https://github.com/virtualcitySYSTEMS/map-ui)
+**Provided by:** VC Map Project (virtualcitySYSTEMS)
 
-## Overview
+## Description
 
-This repository contains the code for the `openaq` project, which is part of the [VC Map Project](https://github.com/virtualcitySYSTEMS/map-ui). The `openaq` project is designed to interact with the OpenAQ API to retrieve and display air quality data.
+`openaq` is a plugin for the [VC Map Project](https://github.com/virtualcitySYSTEMS/map-ui) that retrieves air quality measurements from the OpenAQ API and displays them in feature information charts. It supports line and bar charts.
 
-## Features
+## Installation Prerequisites
 
-- Fetches air quality data from the OpenAQ API.
-- Processes and displays the data in a user-friendly format.
-- Integrates with the VC Map Project for enhanced visualization.
+- **For development:** Node.js `20.18.0`.
+- **For deployment:** VC Publisher or a deployed VC Map application.
+- An OpenAQ API proxy configured on your web server. OpenAQ does not allow direct cross-origin requests, so the plugin needs to access the API through a server-side proxy.
 
-## Installation for developers
+## Installation Instructions
 
-Required: **Node 20.18.0**
+1. Obtain the built `*.tar.gz` package.
+2. Install it using VC Publisher, or for direct use in a map application, extract it into the application’s `plugins` directory. The resulting path should be `plugins/@sensor/openaq`.
+3. Add the `@sensor/openaq` plugin to a module and configure it as described under [Additional Information](#additional-information).
 
-To install the necessary dependencies, run the following command:
+## Built Image Registry
 
-```bash
-npm install
-```
+Not specified in the current README.
 
-## Installation for VC Map users
+## License
 
-download the build code as \*.tar.gz and install it on your VC Publisher. Or for direct use in Map environment, go to your webserver to your map application and there open the plugins folder. Extract the \*.tar.gz here. In the end you should have a folder **@sensor** in your **plugins** directory and inside that a folder name **openaq**.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### configuration parameters
+## External technical resources
 
-| Parameter   | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| ----------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| chartType   | String | add here either 'bar' or 'line' to display measurement values in feature info as line chart or bar chart                                                                                                                                                                                                                                                                                                                               |
-| openaqURL   | String | Enter here the proxy URL to OpenAQ API. Since OpenAQ does not allow CORS, you need to proxy the OpenAQ API through your web server and set your API Key there as well. An example of .htaccess is below. [see here: OpenAQ - API Key](https://docs.openaq.org/using-the-api/api-key). As OpenAQ Dev support states: _"... I suggest using a server-side solution which would avoid the cross-origin problem and ensure API security."_ |
-|             |
-| requestDays | Number | Specify the number of days, used for initially requesting measurements on clicking of a sensor position. Should be one of [1, 2, 3, 4, 5, 6, 7, 14, 30, 60, 90, 120, 180]. Be reminded, that higher numbers > 7 will initially request a lot of data. Means chart creation could take longer on launching the feature info.                                                                                                            |
+- [OpenAQ API](https://api.openaq.org/)
+- [OpenAQ API key documentation](https://docs.openaq.org/using-the-api/api-key)
 
-### Example .htaccess Configuration
+## User Guide References
+
+No user guide or FAQ links were included in the current README.
+
+## Additional Information
+
+### Configuration parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `chartType` | String | Set to `bar` or `line` to display measurement values as a bar or line chart in feature information. |
+| `openaqURL` | String | URL of the server-side proxy to the OpenAQ API. Configure the API key on the proxy server, not in the client-side plugin. |
+| `requestDays` | Number | Number of days of measurements to request when a sensor position is clicked. Supported values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `14`, `30`, `60`, `90`, `120`, and `180`. Larger values can result in more data being requested and slower chart loading. |
+
+### Example `.htaccess` proxy configuration
+
+Replace the placeholder API key with your own. Configure the proxy on your web server; do not expose the key in the map application’s client-side configuration.
 
 ```apache
 <IfModule mod_rewrite.c>
- RequestHeader set X-API-Key "22767***************************"
+ RequestHeader set X-API-Key "YOUR_OPENAQ_API_KEY"
  RewriteRule ^(.*)$ https://api.openaq.org/$1 [P]
 </IfModule>
 
@@ -47,50 +61,50 @@ Header set Access-Control-Allow-Origin "*"
 Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
 ```
 
-### app configuration in VC Publisher
+### Configuration in VC Publisher
 
-add the plugin **@sensor/openaq** to a module of your choice. Open the configuration editor of the plugin and specify the parameters as described in [configuration parameters](#configuration-parameters).
+Add the `@sensor/openaq` plugin to a module of your choice. Open the plugin’s configuration editor and set the parameters described in [Configuration parameters](#configuration-parameters).
 
-### plugin configuration in map environment on web server
+### Configuration in a map application
 
-open a module of your choice in directory **configs** and add in section _plugins_ the below json object. If _plugins_ sections does not exist create the plugins sections with **"plugins":[]**
+In the web server’s `configs` directory, open a module configuration and add the plugin object to its `plugins` array. If the `plugins` section does not exist, create it as `"plugins": []`.
 
 ```json
 {
   "name": "@sensor/openaq",
-  "openaqURL": "https://{your web url}}/openaqproxy/",
+  "openaqURL": "https://your-web-host/openaqproxy/",
   "chartType": "line",
   "requestDays": 7,
   "entry": "src/index.js"
 }
 ```
 
-Adjust the parameters as described in [configuration parameters](#configuration-parameters).
+Adjust the values as described in [Configuration parameters](#configuration-parameters).
 
-## Usage for developers
+### Developer setup and usage
 
-To start the application, use the following command:
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npx vcmplugin serve
 ```
 
-This will launch the application and you can access it in your web browser.
+### Contributing
 
-## Contributing
-
-We welcome contributions to the `openaq` project. If you would like to contribute, please follow these steps:
+Contributions are welcome:
 
 1. Fork the repository.
-2. Create a new branch for your feature or bugfix.
+2. Create a branch for your feature or bug fix.
 3. Make your changes and commit them with a clear message.
-4. Push your changes to your fork.
-5. Create a pull request to the main repository.
+4. Push the branch to your fork.
+5. Open a pull request.
 
-## License
+### Contact
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-## Contact
-
-For any questions or inquiries, please contact the project maintainers through the [VC Map Project](https://github.com/virtualcitySYSTEMS/map-ui) repository.
+For questions or inquiries, contact the project maintainers through the [VC Map Project](https://github.com/virtualcitySYSTEMS/map-ui) repository.
